@@ -49,7 +49,9 @@ public class RecentMediaListFragment extends Fragment implements LoaderManager.L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_file_list, container, false);
-        mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
+        //dhlu
+        //mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
+        //end
         return viewGroup;
     }
 

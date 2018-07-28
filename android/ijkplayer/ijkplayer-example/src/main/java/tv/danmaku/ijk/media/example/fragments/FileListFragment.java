@@ -66,8 +66,9 @@ public class FileListFragment extends Fragment implements LoaderManager.LoaderCa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_file_list, container, false);
         mPathView = (TextView) viewGroup.findViewById(R.id.path_view);
-        mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
-
+        //dhlu
+        //mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
+        //end
         mPathView.setVisibility(View.VISIBLE);
 
         return viewGroup;

@@ -17,11 +17,18 @@
         android:visibility="gone"
         android:lines="1" />
 
-    <ListView
-        android:id="@+id/file_list_view"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editText_url"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:choiceMode="singleChoice"
-        tools:context=".file_list_view" />
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="url" />
+
+    <Button
+        android:id="@+id/button_play"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="play" />
 
 </LinearLayout>

@@ -19,6 +19,7 @@ package tv.danmaku.ijk.media.example.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,14 +28,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import tv.danmaku.ijk.media.example.R;
 import tv.danmaku.ijk.media.example.activities.VideoActivity;
 
+import static android.os.ParcelFileDescriptor.MODE_WORLD_READABLE;
+import static android.os.ParcelFileDescriptor.MODE_WORLD_WRITEABLE;
+
 public class SampleMediaListFragment extends Fragment {
     private ListView mFileListView;
+    //dhlu
+    private EditText EditText_url;
+    private Button Button_play;
+
+    //end dhlu
     private SampleMediaAdapter mAdapter;
 
     public static SampleMediaListFragment newInstance() {
@@ -46,30 +58,67 @@ public class SampleMediaListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup viewGroup = (ViewGroup) inflater.inflate(R.layout.fragment_file_list, container, false);
-        mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
+        //dhlu
+        //mFileListView = (ListView) viewGroup.findViewById(R.id.file_list_view);
+        EditText_url = (EditText) viewGroup.findViewById(R.id.editText_url);
+        //set default text
+        String url = GetKeyValue(getActivity(),"url");
+        if( 0!=url.length() ) {
+            EditText_url.setText(url);
+        }
+        Button_play = (Button) viewGroup.findViewById(R.id.button_play);
+        //end dhlu
         return viewGroup;
     }
 
+    public  static String  GetKeyValue(Activity activity,String key){
+        SharedPreferences read = activity.getSharedPreferences("lock", activity.MODE_PRIVATE);
+        if(null==read)
+            return "";
+        String value = read.getString("url", "");
+        return  value;
+    }
+    public  static void  WriteKeyValue(Activity activity,String key,String value){
+        SharedPreferences.Editor editor = activity.getSharedPreferences("lock", activity.MODE_PRIVATE).edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         final Activity activity = getActivity();
+        //dhlu
 
-        mAdapter = new SampleMediaAdapter(activity);
-        mFileListView.setAdapter(mAdapter);
-        mFileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Button_play.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
-                SampleMediaItem item = mAdapter.getItem(position);
-                String name = item.mName;
-                String url = item.mUrl;
-                VideoActivity.intentTo(activity, url, name);
+            public void onClick(View v) {
+                String url =  EditText_url.getText().toString();
+                SampleMediaListFragment.WriteKeyValue(activity,"url",url);
+                Toast tot = Toast.makeText(
+                        v.getContext(),
+                        url,
+                        Toast.LENGTH_LONG);
+                tot.show();
+
+                VideoActivity.intentTo(activity, url, "toffsplayer");
             }
         });
+        //create player button
+//        mAdapter = new SampleMediaAdapter(activity);
+        //mFileListView.setAdapter(mAdapter);
+//        mFileListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, final long id) {
+//                SampleMediaItem item = mAdapter.getItem(position);
+//                String name = item.mName;
+//                String url = item.mUrl;
+//                VideoActivity.intentTo(activity, url, name);
+//            }
+//        });
 
-        mAdapter.addItem("rtmp://103.21.118.166/toffs/live1", "rtmp");
-        mAdapter.addItem("http://103.21.118.166:8080/toffs/live1/index.m3u8", "m3u8");
+        //mAdapter.addItem("rtmp://103.21.118.166/toffs/live1", "rtmp");
+        //mAdapter.addItem("http://103.21.118.166:8080/toffs/live1/index.m3u8", "m3u8");
 //        mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear2/prog_index.m3u8", "bipbop basic 640x480 @ 650 kbps");
 //        mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear3/prog_index.m3u8", "bipbop basic 640x480 @ 1 Mbps");
 //        mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/gear4/prog_index.m3u8", "bipbop basic 960x720 @ 2 Mbps");
@@ -81,6 +130,7 @@ public class SampleMediaListFragment extends Fragment {
 //        mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/gear4/prog_index.m3u8", "bipbop advanced 1289x720 @ 1 Mbps");
 //        mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/gear5/prog_index.m3u8", "bipbop advanced 1920x1080 @ 2 Mbps");
 //        mAdapter.addItem("http://devimages.apple.com.edgekey.net/streaming/examples/bipbop_16x9/gear0/prog_index.m3u8", "bipbop advanced 22.050Hz stereo @ 40 kbps");
+        //end dhlu
     }
 
     final class SampleMediaItem {
